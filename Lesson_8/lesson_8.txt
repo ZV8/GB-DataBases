@@ -1,0 +1,48 @@
+USE vk;
+
+-- 3. Определить кто больше поставил лайков (всего) - мужчины или женщины?
+SELECT profiles.gender, COUNT(gender) AS count  
+ FROM likes JOIN profiles ON likes.user_id = profiles.user_id 
+ GROUP BY profiles.gender;
+
+ 
+ 
+-- 4. Подсчитать общее количество лайков десяти самым молодым пользователям (сколько лайков получили 10 самых молодых пользователей). 
+SELECT COUNT(likes.user_id) as count 
+  FROM likes JOIN (SELECT profiles.user_id FROM profiles ORDER BY profiles.birthday DESC LIMIT 10) AS profiles
+  WHERE likes.user_id = profiles.user_id AND likes.target_type_id = 2;
+ 
+ 
+ 
+ -- 5. Найти 10 пользователей, которые проявляют наименьшую активность в использовании социальной сети
+ -- (меньше всего поставили лайков)
+ 
+ -- это можно сделать короче, используя JOIN ?
+SELECT 
+  CONCAT(first_name, ' ', last_name) AS user, 
+	(SELECT COUNT(*) FROM likes WHERE likes.user_id = users.id) + 
+	(SELECT COUNT(*) FROM media WHERE media.user_id = users.id) + 
+	(SELECT COUNT(*) FROM messages WHERE messages.from_user_id = users.id) AS overall_activity 
+	  FROM users
+	  ORDER BY overall_activity
+	  LIMIT 10;
+	 
+	 
+-- мой рабочий с JOIN (по сумме лайков и сообщений)
+SELECT CONCAT(first_name, ' ', last_name) AS user, count_likes + count_messages AS `counts_likes+messages`
+FROM users 
+  JOIN 
+  (SELECT user_id as `id`, COUNT(user_id) as count_likes
+      FROM likes 
+      GROUP BY user_id
+      ORDER BY count_likes ASC) as likes
+  JOIN
+  (SELECT from_user_id as `id`, COUNT(from_user_id) as count_messages
+      FROM messages 
+      GROUP BY from_user_id
+      ORDER BY count_messages ASC) as messages
+ WHERE users.id = likes.id AND users.id = messages.id ORDER BY `counts_likes+messages` ASC LIMIT 10;
+	 
+	 
+	 
+	 
