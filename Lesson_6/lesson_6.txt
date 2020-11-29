@@ -1,0 +1,299 @@
+USE vk;
+
+-- 1. Создать и заполнить таблицы лайков и постов.
+
+-- Таблица лайков
+DROP TABLE IF EXISTS likes;
+CREATE TABLE likes (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED NOT NULL,
+  target_id INT UNSIGNED NOT NULL,
+  target_type_id INT UNSIGNED NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Таблица типов лайков
+DROP TABLE IF EXISTS target_types;
+CREATE TABLE target_types (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO target_types (name) VALUES 
+  ('messages'),
+  ('users'),
+  ('media'),
+  ('posts');
+
+-- Заполняем лайки
+INSERT INTO likes 
+  SELECT 
+    id, 
+    FLOOR(1 + (RAND() * 100)), 
+    FLOOR(1 + (RAND() * 100)),
+    FLOOR(1 + (RAND() * 4)),
+    CURRENT_TIMESTAMP 
+  FROM messages;
+
+-- Проверим
+SELECT * FROM likes LIMIT 10;
+
+
+-- Создадим таблицу постов
+CREATE TABLE posts (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNSIGNED NOT NULL,
+  community_id INT UNSIGNED,
+  head VARCHAR(255),
+  body TEXT NOT NULL,
+  media_id INT UNSIGNED,
+  is_public BOOLEAN DEFAULT TRUE,
+  is_archived BOOLEAN DEFAULT FALSE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Заполняем лайки
+INSERT INTO posts 
+  SELECT 
+    id, 
+    FLOOR(1 + (RAND() * 100)), 
+    FLOOR(1 + (RAND() * 20)),
+    '',
+    '',
+    FLOOR(1 + (RAND() * 100)), 
+    1,
+    0,
+    (CURRENT_TIMESTAMP - FLOOR(1000000 + (RAND() * 27))),
+    CURRENT_TIMESTAMP
+  FROM messages;
+ 
+UPDATE `posts` SET `head` = "lectus rutrum urna,", `body` = "posuere vulputate, lacus. Cras interdum. Nunc sollicitudin commodo ipsum. Suspendisse non leo." WHERE `id` = 1;
+UPDATE `posts` SET `head` = "Phasellus dolor elit,", `body` = "nonummy ipsum non arcu. Vivamus sit amet risus. Donec egestas. Aliquam" WHERE `id` = 2;
+UPDATE `posts` SET `head` = "sem, vitae aliquam", `body` = "mollis. Phasellus libero mauris, aliquam eu, accumsan sed, facilisis vitae, orci. Phasellus dapibus" WHERE `id` = 3;
+UPDATE `posts` SET `head` = "ante. Maecenas mi", `body` = "consequat dolor vitae dolor. Donec fringilla. Donec feugiat metus sit amet" WHERE `id` = 4;
+UPDATE `posts` SET `head` = "mi eleifend egestas. Sed", `body` = "eu, ultrices sit amet, risus. Donec nibh enim, gravida sit amet, dapibus id, blandit at," WHERE `id` = 5;
+UPDATE `posts` SET `head` = "urna. Vivamus molestie", `body` = "nibh. Quisque nonummy ipsum non arcu. Vivamus sit amet risus. Donec egestas. Aliquam" WHERE `id` = 6;
+UPDATE `posts` SET `head` = "convallis, ante lectus", `body` = "nisi sem semper erat, in consectetuer ipsum nunc id enim. Curabitur massa. Vestibulum accumsan neque et nunc. Quisque" WHERE `id` = 7;
+UPDATE `posts` SET `head` = "placerat eget, venenatis", `body` = "tempus, lorem fringilla ornare placerat, orci lacus vestibulum lorem, sit amet ultricies sem" WHERE `id` = 8;
+UPDATE `posts` SET `head` = "pede. Praesent eu dui. Cum", `body` = "fringilla cursus purus. Nullam scelerisque neque sed sem egestas blandit. Nam nulla magna, malesuada vel, convallis in, cursus et, eros." WHERE `id` = 9;
+UPDATE `posts` SET `head` = "in faucibus orci luctus", `body` = "et, lacinia vitae, sodales at, velit. Pellentesque ultricies dignissim lacus. Aliquam rutrum lorem ac risus. Morbi metus. Vivamus euismod" WHERE `id` = 10;
+UPDATE `posts` SET `head` = "justo sit amet nulla. Donec", `body` = "ornare lectus justo eu arcu. Morbi sit amet massa. Quisque porttitor eros nec tellus. Nunc lectus" WHERE `id` = 11;
+UPDATE `posts` SET `head` = "enim diam vel", `body` = "odio. Phasellus at augue id ante dictum cursus. Nunc mauris" WHERE `id` = 12;
+UPDATE `posts` SET `head` = "libero. Proin sed turpis", `body` = "condimentum. Donec at arcu. Vestibulum ante ipsum primis in faucibus orci" WHERE `id` = 13;
+UPDATE `posts` SET `head` = "rutrum eu, ultrices sit amet,", `body` = "amet massa. Quisque porttitor eros nec tellus. Nunc lectus pede, ultrices a, auctor non, feugiat nec," WHERE `id` = 14;
+UPDATE `posts` SET `head` = "velit. Pellentesque ultricies dignissim", `body` = "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec" WHERE `id` = 15;
+UPDATE `posts` SET `head` = "Donec sollicitudin adipiscing ligula.", `body` = "gravida sagittis. Duis gravida. Praesent eu nulla at sem molestie sodales. Mauris blandit" WHERE `id` = 16;
+UPDATE `posts` SET `head` = "odio. Nam interdum enim", `body` = "malesuada id, erat. Etiam vestibulum massa rutrum magna. Cras convallis convallis dolor. Quisque tincidunt pede ac" WHERE `id` = 17;
+UPDATE `posts` SET `head` = "Duis elementum, dui quis accumsan", `body` = "dignissim pharetra. Nam ac nulla. In tincidunt congue turpis. In condimentum. Donec at arcu. Vestibulum ante" WHERE `id` = 18;
+UPDATE `posts` SET `head` = "imperdiet nec, leo. Morbi neque", `body` = "Nunc laoreet lectus quis massa. Mauris vestibulum, neque sed dictum eleifend, nunc risus varius orci, in" WHERE `id` = 19;
+UPDATE `posts` SET `head` = "nunc sed pede. Cum", `body` = "sed dictum eleifend, nunc risus varius orci, in consequat enim diam vel arcu. Curabitur ut odio vel est" WHERE `id` = 20;
+UPDATE `posts` SET `head` = "dolor vitae dolor.", `body` = "sit amet ultricies sem magna nec quam. Curabitur vel lectus. Cum sociis natoque penatibus et" WHERE `id` = 21;
+UPDATE `posts` SET `head` = "ac risus. Morbi metus. Vivamus", `body` = "et magnis dis parturient montes, nascetur ridiculus mus. Aenean eget magna. Suspendisse tristique neque venenatis lacus. Etiam bibendum fermentum metus." WHERE `id` = 22;
+UPDATE `posts` SET `head` = "rutrum lorem ac risus.", `body` = "tincidunt congue turpis. In condimentum. Donec at arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia" WHERE `id` = 23;
+UPDATE `posts` SET `head` = "eu elit. Nulla", `body` = "vitae purus gravida sagittis. Duis gravida. Praesent eu nulla at sem" WHERE `id` = 24;
+UPDATE `posts` SET `head` = "tortor nibh sit amet", `body` = "ante blandit viverra. Donec tempus, lorem fringilla ornare placerat, orci lacus" WHERE `id` = 25;
+UPDATE `posts` SET `head` = "magnis dis parturient", `body` = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam laoreet, libero et tristique" WHERE `id` = 26;
+UPDATE `posts` SET `head` = "adipiscing. Mauris molestie", `body` = "eget mollis lectus pede et risus. Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet" WHERE `id` = 27;
+UPDATE `posts` SET `head` = "dapibus rutrum, justo.", `body` = "purus mauris a nunc. In at pede. Cras vulputate velit eu sem. Pellentesque ut" WHERE `id` = 28;
+UPDATE `posts` SET `head` = "purus, in molestie tortor", `body` = "Nulla eu neque pellentesque massa lobortis ultrices. Vivamus rhoncus. Donec est. Nunc" WHERE `id` = 29;
+UPDATE `posts` SET `head` = "Curabitur consequat, lectus sit", `body` = "cursus. Nunc mauris elit, dictum eu, eleifend nec, malesuada ut, sem. Nulla interdum. Curabitur" WHERE `id` = 30;
+UPDATE `posts` SET `head` = "Sed nulla ante, iaculis nec,", `body` = "velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est" WHERE `id` = 31;
+UPDATE `posts` SET `head` = "adipiscing elit. Etiam laoreet,", `body` = "eu elit. Nulla facilisi. Sed neque. Sed eget lacus. Mauris non" WHERE `id` = 32;
+UPDATE `posts` SET `head` = "metus vitae velit egestas lacinia.", `body` = "rutrum non, hendrerit id, ante. Nunc mauris sapien, cursus in, hendrerit consectetuer, cursus et, magna. Praesent interdum ligula" WHERE `id` = 33;
+UPDATE `posts` SET `head` = "augue. Sed molestie.", `body` = "in, tempus eu, ligula. Aenean euismod mauris eu elit. Nulla facilisi. Sed neque. Sed eget lacus. Mauris non dui nec" WHERE `id` = 34;
+UPDATE `posts` SET `head` = "ad litora torquent per", `body` = "quam vel sapien imperdiet ornare. In faucibus. Morbi vehicula. Pellentesque tincidunt tempus risus. Donec egestas. Duis ac arcu. Nunc" WHERE `id` = 35;
+UPDATE `posts` SET `head` = "vulputate ullamcorper magna. Sed", `body` = "id, mollis nec, cursus a, enim. Suspendisse aliquet, sem ut cursus luctus, ipsum" WHERE `id` = 36;
+UPDATE `posts` SET `head` = "enim. Nunc ut", `body` = "aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida. Praesent eu nulla" WHERE `id` = 37;
+UPDATE `posts` SET `head` = "dolor dolor, tempus non, lacinia", `body` = "tincidunt orci quis lectus. Nullam suscipit, est ac facilisis facilisis," WHERE `id` = 38;
+UPDATE `posts` SET `head` = "rhoncus. Proin nisl sem,", `body` = "sed dui. Fusce aliquam, enim nec tempus scelerisque, lorem ipsum sodales purus, in molestie tortor nibh sit amet" WHERE `id` = 39;
+UPDATE `posts` SET `head` = "odio. Aliquam vulputate ullamcorper magna.", `body` = "purus sapien, gravida non, sollicitudin a, malesuada id, erat. Etiam vestibulum massa rutrum magna. Cras convallis convallis" WHERE `id` = 40;
+UPDATE `posts` SET `head` = "consequat purus. Maecenas libero", `body` = "ipsum porta elit, a feugiat tellus lorem eu metus. In lorem. Donec elementum, lorem ut aliquam iaculis, lacus pede" WHERE `id` = 41;
+UPDATE `posts` SET `head` = "libero. Integer in magna.", `body` = "urna. Vivamus molestie dapibus ligula. Aliquam erat volutpat. Nulla dignissim. Maecenas ornare egestas ligula. Nullam feugiat placerat velit." WHERE `id` = 42;
+UPDATE `posts` SET `head` = "quis arcu vel", `body` = "Mauris quis turpis vitae purus gravida sagittis. Duis gravida. Praesent eu nulla at" WHERE `id` = 43;
+UPDATE `posts` SET `head` = "habitant morbi tristique senectus", `body` = "aliquet magna a neque. Nullam ut nisi a odio semper cursus. Integer mollis. Integer tincidunt" WHERE `id` = 44;
+UPDATE `posts` SET `head` = "pharetra nibh. Aliquam", `body` = "litora torquent per conubia nostra, per inceptos hymenaeos. Mauris ut quam vel sapien imperdiet ornare." WHERE `id` = 45;
+UPDATE `posts` SET `head` = "vitae dolor. Donec", `body` = "ac turpis egestas. Fusce aliquet magna a neque. Nullam ut nisi a odio semper cursus. Integer mollis. Integer" WHERE `id` = 46;
+UPDATE `posts` SET `head` = "arcu iaculis enim, sit amet", `body` = "diam. Duis mi enim, condimentum eget, volutpat ornare, facilisis eget, ipsum. Donec sollicitudin adipiscing ligula. Aenean gravida" WHERE `id` = 47;
+UPDATE `posts` SET `head` = "eu turpis. Nulla aliquet. Proin", `body` = "nec ligula consectetuer rhoncus. Nullam velit dui, semper et, lacinia vitae, sodales at, velit. Pellentesque ultricies dignissim lacus. Aliquam" WHERE `id` = 48;
+UPDATE `posts` SET `head` = "libero dui nec", `body` = "tincidunt dui augue eu tellus. Phasellus elit pede, malesuada vel, venenatis vel, faucibus id, libero. Donec" WHERE `id` = 49;
+UPDATE `posts` SET `head` = "id, libero. Donec consectetuer", `body` = "consequat nec, mollis vitae, posuere at, velit. Cras lorem lorem, luctus ut," WHERE `id` = 50;
+UPDATE `posts` SET `head` = "aliquet, metus urna convallis", `body` = "dictum augue malesuada malesuada. Integer id magna et ipsum cursus vestibulum. Mauris magna." WHERE `id` = 51;
+UPDATE `posts` SET `head` = "faucibus leo, in lobortis tellus", `body` = "vitae nibh. Donec est mauris, rhoncus id, mollis nec, cursus a, enim." WHERE `id` = 52;
+UPDATE `posts` SET `head` = "fermentum arcu. Vestibulum ante", `body` = "commodo auctor velit. Aliquam nisl. Nulla eu neque pellentesque massa lobortis ultrices. Vivamus rhoncus. Donec" WHERE `id` = 53;
+UPDATE `posts` SET `head` = "consequat dolor vitae dolor. Donec", `body` = "sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." WHERE `id` = 54;
+UPDATE `posts` SET `head` = "nec ligula consectetuer", `body` = "Quisque ac libero nec ligula consectetuer rhoncus. Nullam velit dui, semper et, lacinia vitae, sodales at, velit. Pellentesque ultricies dignissim" WHERE `id` = 55;
+UPDATE `posts` SET `head` = "vel turpis. Aliquam adipiscing", `body` = "tellus faucibus leo, in lobortis tellus justo sit amet nulla. Donec non" WHERE `id` = 56;
+UPDATE `posts` SET `head` = "Aliquam gravida mauris ut", `body` = "lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci. Ut semper pretium neque. Morbi quis urna." WHERE `id` = 57;
+UPDATE `posts` SET `head` = "sit amet, risus.", `body` = "ipsum dolor sit amet, consectetuer adipiscing elit. Etiam laoreet, libero et tristique" WHERE `id` = 58;
+UPDATE `posts` SET `head` = "et magnis dis", `body` = "habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam fringilla cursus purus." WHERE `id` = 59;
+UPDATE `posts` SET `head` = "nulla. Integer vulputate, risus a", `body` = "malesuada vel, venenatis vel, faucibus id, libero. Donec consectetuer mauris id sapien. Cras dolor dolor, tempus" WHERE `id` = 60;
+UPDATE `posts` SET `head` = "bibendum ullamcorper. Duis cursus,", `body` = "Etiam ligula tortor, dictum eu, placerat eget, venenatis a, magna." WHERE `id` = 61;
+UPDATE `posts` SET `head` = "porta elit, a", `body` = "ac turpis egestas. Fusce aliquet magna a neque. Nullam ut nisi a odio semper cursus. Integer" WHERE `id` = 62;
+UPDATE `posts` SET `head` = "massa. Integer vitae", `body` = "sed, sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue" WHERE `id` = 63;
+UPDATE `posts` SET `head` = "nulla. Donec non", `body` = "Morbi neque tellus, imperdiet non, vestibulum nec, euismod in, dolor. Fusce feugiat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit." WHERE `id` = 64;
+UPDATE `posts` SET `head` = "vehicula risus. Nulla eget", `body` = "et malesuada fames ac turpis egestas. Fusce aliquet magna a neque." WHERE `id` = 65;
+UPDATE `posts` SET `head` = "scelerisque, lorem ipsum sodales", `body` = "accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer" WHERE `id` = 66;
+UPDATE `posts` SET `head` = "sagittis. Nullam vitae diam.", `body` = "fringilla purus mauris a nunc. In at pede. Cras vulputate" WHERE `id` = 67;
+UPDATE `posts` SET `head` = "Nunc lectus pede,", `body` = "vitae erat vel pede blandit congue. In scelerisque scelerisque dui. Suspendisse ac metus vitae velit egestas lacinia. Sed congue," WHERE `id` = 68;
+UPDATE `posts` SET `head` = "nec ligula consectetuer rhoncus.", `body` = "eu nibh vulputate mauris sagittis placerat. Cras dictum ultricies ligula. Nullam enim. Sed nulla ante, iaculis nec, eleifend non," WHERE `id` = 69;
+UPDATE `posts` SET `head` = "ante dictum mi, ac", `body` = "sagittis. Nullam vitae diam. Proin dolor. Nulla semper tellus id nunc interdum feugiat. Sed nec metus facilisis lorem tristique" WHERE `id` = 70;
+UPDATE `posts` SET `head` = "pede, nonummy ut, molestie in,", `body` = "Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis, pede. Suspendisse dui. Fusce diam nunc, ullamcorper eu," WHERE `id` = 71;
+UPDATE `posts` SET `head` = "tellus. Phasellus elit pede, malesuada", `body` = "sed pede nec ante blandit viverra. Donec tempus, lorem fringilla ornare" WHERE `id` = 72;
+UPDATE `posts` SET `head` = "In at pede. Cras vulputate", `body` = "ornare lectus justo eu arcu. Morbi sit amet massa. Quisque porttitor eros nec tellus." WHERE `id` = 73;
+UPDATE `posts` SET `head` = "tristique senectus et netus et", `body` = "Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus vitae mauris sit amet lorem semper auctor. Mauris" WHERE `id` = 74;
+UPDATE `posts` SET `head` = "volutpat. Nulla dignissim.", `body` = "Donec tincidunt. Donec vitae erat vel pede blandit congue. In scelerisque scelerisque dui. Suspendisse ac metus" WHERE `id` = 75;
+UPDATE `posts` SET `head` = "semper tellus id", `body` = "consectetuer adipiscing elit. Aliquam auctor, velit eget laoreet posuere, enim nisl elementum purus, accumsan interdum" WHERE `id` = 76;
+UPDATE `posts` SET `head` = "amet risus. Donec egestas. Aliquam", `body` = "Fusce diam nunc, ullamcorper eu, euismod ac, fermentum vel, mauris. Integer sem" WHERE `id` = 77;
+UPDATE `posts` SET `head` = "nunc risus varius", `body` = "quam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam fringilla cursus purus. Nullam" WHERE `id` = 78;
+UPDATE `posts` SET `head` = "sed dui. Fusce aliquam,", `body` = "faucibus. Morbi vehicula. Pellentesque tincidunt tempus risus. Donec egestas. Duis ac arcu. Nunc mauris. Morbi non" WHERE `id` = 79;
+UPDATE `posts` SET `head` = "sociis natoque penatibus et", `body` = "est arcu ac orci. Ut semper pretium neque. Morbi quis urna. Nunc quis arcu vel quam dignissim pharetra. Nam ac" WHERE `id` = 80;
+UPDATE `posts` SET `head` = "ridiculus mus. Proin vel", `body` = "semper tellus id nunc interdum feugiat. Sed nec metus facilisis lorem" WHERE `id` = 81;
+UPDATE `posts` SET `head` = "Nulla facilisis. Suspendisse commodo tincidunt", `body` = "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam" WHERE `id` = 82;
+UPDATE `posts` SET `head` = "iaculis, lacus pede sagittis", `body` = "blandit viverra. Donec tempus, lorem fringilla ornare placerat, orci lacus vestibulum lorem," WHERE `id` = 83;
+UPDATE `posts` SET `head` = "nunc sed pede. Cum sociis", `body` = "Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet non," WHERE `id` = 84;
+UPDATE `posts` SET `head` = "Sed et libero. Proin", `body` = "erat, in consectetuer ipsum nunc id enim. Curabitur massa. Vestibulum accumsan neque et nunc. Quisque ornare tortor at risus." WHERE `id` = 85;
+UPDATE `posts` SET `head` = "id magna et ipsum", `body` = "vel arcu eu odio tristique pharetra. Quisque ac libero nec ligula consectetuer rhoncus. Nullam velit dui, semper et, lacinia" WHERE `id` = 86;
+UPDATE `posts` SET `head` = "amet, risus. Donec nibh", `body` = "dui, semper et, lacinia vitae, sodales at, velit. Pellentesque ultricies dignissim" WHERE `id` = 87;
+UPDATE `posts` SET `head` = "tellus sem mollis dui, in", `body` = "adipiscing lobortis risus. In mi pede, nonummy ut, molestie in, tempus eu, ligula. Aenean euismod mauris eu" WHERE `id` = 88;
+UPDATE `posts` SET `head` = "sit amet orci. Ut", `body` = "vel turpis. Aliquam adipiscing lobortis risus. In mi pede, nonummy ut, molestie in, tempus eu, ligula. Aenean" WHERE `id` = 89;
+UPDATE `posts` SET `head` = "feugiat placerat velit.", `body` = "odio semper cursus. Integer mollis. Integer tincidunt aliquam arcu. Aliquam ultrices iaculis odio. Nam" WHERE `id` = 90;
+UPDATE `posts` SET `head` = "amet massa. Quisque porttitor", `body` = "diam lorem, auctor quis, tristique ac, eleifend vitae, erat. Vivamus nisi. Mauris nulla. Integer urna. Vivamus molestie dapibus" WHERE `id` = 91;
+UPDATE `posts` SET `head` = "egestas lacinia. Sed congue,", `body` = "semper cursus. Integer mollis. Integer tincidunt aliquam arcu. Aliquam ultrices iaculis odio. Nam interdum enim non nisi. Aenean eget metus." WHERE `id` = 92;
+UPDATE `posts` SET `head` = "in, dolor. Fusce feugiat.", `body` = "ligula. Donec luctus aliquet odio. Etiam ligula tortor, dictum eu, placerat eget, venenatis a, magna. Lorem ipsum dolor" WHERE `id` = 93;
+UPDATE `posts` SET `head` = "fermentum metus. Aenean", `body` = "neque. Morbi quis urna. Nunc quis arcu vel quam dignissim pharetra. Nam ac nulla. In tincidunt" WHERE `id` = 94;
+UPDATE `posts` SET `head` = "cursus, diam at pretium aliquet,", `body` = "est ac mattis semper, dui lectus rutrum urna, nec luctus felis purus ac" WHERE `id` = 95;
+UPDATE `posts` SET `head` = "ipsum dolor sit amet,", `body` = "purus, in molestie tortor nibh sit amet orci. Ut sagittis lobortis mauris. Suspendisse aliquet molestie tellus. Aenean egestas hendrerit neque." WHERE `id` = 96;
+UPDATE `posts` SET `head` = "orci. Ut semper", `body` = "cursus purus. Nullam scelerisque neque sed sem egestas blandit. Nam nulla" WHERE `id` = 97;
+UPDATE `posts` SET `head` = "diam. Pellentesque habitant", `body` = "dignissim. Maecenas ornare egestas ligula. Nullam feugiat placerat velit. Quisque varius. Nam porttitor scelerisque neque. Nullam nisl. Maecenas malesuada fringilla" WHERE `id` = 98;
+UPDATE `posts` SET `head` = "ultrices posuere cubilia", `body` = "Nullam scelerisque neque sed sem egestas blandit. Nam nulla magna, malesuada vel, convallis in, cursus et, eros. Proin ultrices. Duis" WHERE `id` = 99;
+UPDATE `posts` SET `head` = "malesuada ut, sem.", `body` = "vitae aliquam eros turpis non enim. Mauris quis turpis vitae purus" WHERE `id` = 100;
+
+SELECT * FROM media;
+SELECT * FROM posts LIMIT 10;
+
+
+-- 2. Создать все необходимые внешние ключи и диаграмму отношений.
+
+DESC profiles;
+
+-- Добавляем внешние ключи
+ALTER TABLE profiles
+  ADD CONSTRAINT profiles_user_id_fk 
+    FOREIGN KEY (user_id) REFERENCES users(id)
+      ON DELETE CASCADE;
+
+-- Изменяем тип столбца при необходимости
+-- ALTER TABLE profiles DROP FOREIGN KEY profiles_user_id_fk;
+-- ALTER TABLE profiles MODIFY COLUMN photo_id INT(10) UNSIGNED;
+
+
+DESC messages;
+
+-- Добавляем внешние ключи
+ALTER TABLE messages
+  ADD CONSTRAINT messages_from_user_id_fk 
+    FOREIGN KEY (from_user_id) REFERENCES users(id),
+  ADD CONSTRAINT messages_to_user_id_fk 
+    FOREIGN KEY (to_user_id) REFERENCES users(id),
+  ADD CONSTRAINT messages_media_id_fk 
+    FOREIGN KEY (media_id) REFERENCES media(id);
+
+
+DESC communities_users;
+
+-- Добавляем внешние ключи
+ALTER TABLE communities_users
+  ADD CONSTRAINT communities_users_community_id_fk 
+    FOREIGN KEY (community_id) REFERENCES communities(id),
+  ADD CONSTRAINT communities_users_user_id_fk 
+    FOREIGN KEY (user_id) REFERENCES users(id);
+   
+
+DESC friendship;
+
+-- Добавляем внешние ключи
+ALTER TABLE friendship
+  ADD CONSTRAINT friendship_user_id_fk 
+    FOREIGN KEY (user_id) REFERENCES users(id),
+  ADD CONSTRAINT friendship_friend_id_fk 
+    FOREIGN KEY (friend_id) REFERENCES users(id),
+  ADD CONSTRAINT friendship_status_id_fk 
+    FOREIGN KEY (status_id) REFERENCES friendship_statuses(id);
+   
+   
+DESC likes;
+
+-- Добавляем внешние ключи
+ALTER TABLE likes
+  ADD CONSTRAINT likes_user_id_fk 
+    FOREIGN KEY (user_id) REFERENCES users(id),
+  ADD CONSTRAINT likes_target_type_id_fk 
+    FOREIGN KEY (target_type_id) REFERENCES target_types(id);
+   
+   
+DESC media;
+
+-- Добавляем внешние ключи
+ALTER TABLE media
+  ADD CONSTRAINT media_user_id_fk 
+    FOREIGN KEY (user_id) REFERENCES users(id),
+  ADD CONSTRAINT media_media_type_id_fk 
+    FOREIGN KEY (media_type_id) REFERENCES media_types(id);
+   
+   
+DESC posts;
+
+-- Добавляем внешние ключи
+ALTER TABLE posts
+  ADD CONSTRAINT posts_user_id_fk 
+    FOREIGN KEY (user_id) REFERENCES users(id),
+  ADD CONSTRAINT posts_community_id_fk 
+    FOREIGN KEY (community_id) REFERENCES communities(id),
+  ADD CONSTRAINT posts_media_id_fk 
+    FOREIGN KEY (media_id) REFERENCES media(id);
+   
+
+
+
+-- 3. Определить кто больше поставил лайков (всего) - мужчины или женщины?
+SELECT 
+(SELECT COUNT(id) FROM likes WHERE user_id IN (
+  SELECT * FROM (
+    SELECT user_id 
+      FROM profiles 
+      WHERE gender='F'
+    ) as `F`
+  )
+) as `F`, 
+(SELECT COUNT(id) FROM likes WHERE user_id IN (
+  SELECT * FROM (
+    SELECT user_id 
+      FROM profiles 
+      WHERE gender='M'
+    ) as `M`
+  )
+) as `M`;
+ 
+ 
+-- 4. Подсчитать общее количество лайков десяти самым молодым пользователям (сколько лайков получили 10 самых молодых пользователей). 
+SELECT COUNT(id) FROM likes WHERE user_id IN (
+  SELECT * FROM (
+    SELECT user_id 
+      FROM profiles 
+      ORDER BY birthday DESC
+      LIMIT 10) as `id`
+  );
+ 
+ 
+ -- 5. Найти 10 пользователей, которые проявляют наименьшую активность в использовании социальной сети
+ -- (меньше всего поставили лайков)
+ SELECT first_name, last_name FROM users WHERE id IN (
+  SELECT id FROM (
+    SELECT user_id as `id`, COUNT(user_id) as count_likes
+      FROM likes 
+      GROUP BY user_id
+      ORDER BY count_likes ASC
+     LIMIT 10) as `id`
+  );
