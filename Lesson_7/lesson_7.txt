@@ -1,0 +1,26 @@
+USE shop;
+
+-- 1. Составьте список пользователей users, которые осуществили хотя бы один заказ orders в интернет магазине.
+SELECT DISTINCT o.user_id, u.name  FROM users AS u JOIN orders AS o ON u.id = o.user_id;
+
+
+-- 2. Выведите список товаров products и разделов catalogs, который соответствует товару.
+SELECT p.name AS product, c.name AS catalog FROM products AS p JOIN catalogs AS c ON p.catalog_id = c.id;
+
+
+-- 3. Пусть имеется таблица рейсов flights (id, from, to) и таблица городов cities (label, name). 
+-- Поля from, to и label содержат английские названия городов, поле name — русское. 
+-- Выведите список рейсов flights с русскими названиями городов.
+SELECT * FROM flights;
+SELECT * FROM cities;
+
+SELECT ff.name AS from_rus, tt.name AS to_rus 
+  FROM 
+    (SELECT f.id, c.name FROM flights AS f JOIN cities AS c ON f.from = c.label) AS ff 
+      JOIN 
+    (SELECT f.id, c.name FROM flights AS f JOIN cities AS c ON f.to = c.label) AS tt
+  ON ff.id = tt.id 
+  ORDER BY ff.id;
+
+
+
